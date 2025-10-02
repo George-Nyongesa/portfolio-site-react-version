@@ -67,7 +67,15 @@ export default function Navbar() {
             ))}
 
             <li>
-              <a href="#" className="btn" onClick={() => setMenuOpen(false)}>
+              {/* Prevent default until a real CV link is available */}
+              <a
+                href="/"
+                className="btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMenuOpen(false);
+                }}
+              >
                 Download CV
               </a>
             </li>

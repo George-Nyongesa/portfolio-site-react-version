@@ -19,7 +19,12 @@ export default function Hero() {
               digital experiences and full-stack applications that solve real-world problems.
             </p>
             <div className="hero-buttons">
-              <a href="#" className="btn">
+              {/* Prevent default until you add a real resume link */}
+              <a
+                href="/"
+                className="btn"
+                onClick={(e) => e.preventDefault()}
+              >
                 Download Resume
               </a>
               <a href="#projects" className="btn btn-outline">
