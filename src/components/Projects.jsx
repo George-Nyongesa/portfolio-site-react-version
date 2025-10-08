@@ -1,6 +1,16 @@
 import React from "react";
 
 const PROJECTS = [
+   {
+    title: "Personal Portfolio Website",
+    description:
+      "A responsive and interactive portfolio website built with React to showcase my projects, skills, and experience. Features include smooth animations, a dynamic project gallery, and a contact form integrated with EmailJS.",
+    image:
+      "images/portfolio.png",
+    tech: ["React", "EmailJS", "CSS3", "Netlify"],
+    demo: "https://george-nyongesa.netlify.app",
+    code: "https://github.com/George-Nyongesa/portfolio-site-react-version",
+  },
   {
     title: "E-Commerce Platform",
     description:
