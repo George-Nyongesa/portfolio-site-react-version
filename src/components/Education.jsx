@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Education() {
   return (
-    <section id="education" style={{ backgroundColor: "#f0f4ff" }}>
+    <section id="education" >
       <div className="container">
         <h2>Education</h2>
         <p>A results-driven background in computer science and software engineering, combining strong theoretical knowledge with practical expertise in building scalable and user-focused web solutions.</p>

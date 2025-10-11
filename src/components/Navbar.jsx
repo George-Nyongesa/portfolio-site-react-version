@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
+
 
 const NAV_ITEMS = [
   { id: "home", label: "Home" },
@@ -80,6 +82,8 @@ export default function Navbar() {
               </a>
             </li>
           </ul>
+
+          <ThemeToggle />
 
           <div className="menu-btn" onClick={() => setMenuOpen((s) => !s)}>
             ☰

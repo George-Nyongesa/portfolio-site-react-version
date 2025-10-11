@@ -44,7 +44,7 @@ export default function About() {
             <div className="skill-category">
               <h4>Frameworks & Libraries</h4>
               <div className="skills-grid">
-                {["React", "Next.js", "Flask", "Bootstrap", "Node.js", "Django"].map((s) => (
+                {["React", "Next.js", "Express", "Flask", "Bootstrap", "Tailwind css", "Node.js", "Django"].map((s) => (
                   <span key={s} className="skill-item">{s}</span>
                 ))}
               </div>
@@ -53,7 +53,7 @@ export default function About() {
             <div className="skill-category">
               <h4>Databases</h4>
               <div className="skills-grid">
-                {["MySQL", "MongoDB", "PostgreSQL"].map((s) => (
+                {["MySQL", "MongoDB", "PostgreSQL", "Firebase Firestore"].map((s) => (
                   <span key={s} className="skill-item">{s}</span>
                 ))}
               </div>
@@ -71,7 +71,7 @@ export default function About() {
             <div className="skill-category">
               <h4>ML & AI</h4>
               <div className="skills-grid">
-                {["TensorFlow", "Data Analysis", "Machine Learning"].map((s) => (
+                {["TensorFlow", "Sickit-learn", "Data Analysis", "Machine Learning"].map((s) => (
                   <span key={s} className="skill-item">{s}</span>
                 ))}
               </div>

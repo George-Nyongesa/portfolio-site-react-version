@@ -39,7 +39,7 @@ const PROJECTS = [
 
 export default function Projects() {
   return (
-    <section id="projects" style={{ backgroundColor: "#f0f4ff" }}>
+    <section id="projects" >
       <div className="container">
         <h2>Featured Projects</h2>
         <p>
