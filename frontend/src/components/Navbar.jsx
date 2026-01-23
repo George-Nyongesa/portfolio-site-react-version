@@ -71,15 +71,14 @@ export default function Navbar() {
             <li>
               {/* Prevent default until a real CV link is available */}
               <a
-                href="/"
+                href="http://localhost:5000/resume" // use deployed backend URL in production
                 className="btn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMenuOpen(false);
-                }}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Download CV
+                Download Resume
               </a>
+
             </li>
           </ul>
 

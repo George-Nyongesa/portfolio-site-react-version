@@ -618,13 +618,14 @@ nav {
 .project-links {
   display: flex;
   gap: 15px;
-  margin-top: auto;
-  padding: 0 25px 25px 25px;
+  margin-top: 16px;
 }
 
 .project-links .btn {
   flex: 1;
   text-align: center;
+  padding: 10px 14px;
+  font-size: 0.9rem;
 }
 
 /* Experience Section */
