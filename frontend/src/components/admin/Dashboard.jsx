@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import {
@@ -9,9 +9,6 @@ import {
   FiBook,
   FiFolder,
   FiUser,
-  FiMail,
-  FiPhone,
-  FiMapPin,
   FiEye,
   FiTrash2,
   FiCheck,
@@ -31,18 +28,9 @@ export default function Dashboard() {
   const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/admin/login");
-      return;
-    }
+  
 
-    fetchDashboardData();
-  }, [navigate]);
-
-  const fetchDashboardData = async () => {
+const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
       const [statsRes, contentRes] = await Promise.all([
@@ -64,7 +52,16 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  };
+}, [navigate]);
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/admin/login");
+      return;
+    }
+    fetchDashboardData();
+  }, [navigate, fetchDashboardData]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
