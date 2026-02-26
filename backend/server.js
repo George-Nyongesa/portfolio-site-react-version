@@ -12,13 +12,24 @@ const educationRoutes = require("./routes/education.routes");
 const heroRoutes = require("./routes/hero.routes");
 const aboutRoutes = require("./routes/about.routes");
 const contactRoutes = require("./routes/contact.routes");
-const authRoutes = require("./routes/auth.routes");      // ADD THIS LINE
+const authRoutes = require("./routes/auth.routes");
 const adminRoutes = require("./routes/admin.routes");
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS configuration to allow requests from frontend and deployed frontend
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5000',
+    'https://george-nyongesa.netlify.app',
+    'https://portfolio-backend.onrender.com'
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
@@ -32,7 +43,7 @@ app.use("/api/education", educationRoutes);
 app.use("/api/hero", heroRoutes);
 app.use("/api/about", aboutRoutes);
 app.use("/api/contact", contactRoutes);
-app.use("/api/auth", authRoutes);        // ADD THIS LINE
+app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Resume
@@ -44,6 +55,11 @@ app.get("/resume", (req, res) => {
       res.status(500).send("Failed to download resume");
     }
   });
+});
+
+// Health check endpoint 
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", message: "Backend is running" });
 });
 
 // Start Server
