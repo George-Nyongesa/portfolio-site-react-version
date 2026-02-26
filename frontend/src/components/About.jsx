@@ -1,16 +1,67 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 export default function About() {
   const [about, setAbout] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/about") // fetch about content from backend
-      .then(res => setAbout(res.data))
-      .catch(err => console.error("Failed to fetch about content:", err));
+    const fetchAbout = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get("/about");
+        setAbout(res.data);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch about content:", err);
+        setError("Failed to load about section. Please refresh the page.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAbout();
   }, []);
 
-  if (!about) return null; // can show a loading state
+  if (loading) {
+    return (
+      <section id="about">
+        <div className="container">
+          <h2>About Me</h2>
+          <div className="loading-spinner"></div>
+          <p>Loading about section...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="about">
+        <div className="container">
+          <h2>About Me</h2>
+          <div className="error-message">
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()} className="btn">
+              Retry
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!about) {
+    return (
+      <section id="about">
+        <div className="container">
+          <h2>About Me</h2>
+          <p>No about content available.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="about">

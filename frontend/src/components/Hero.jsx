@@ -1,16 +1,77 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 export default function Hero() {
   const [hero, setHero] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/hero") // fetch hero content from backend
-      .then(res => setHero(res.data))
-      .catch(err => console.error("Failed to fetch hero content:", err));
+    const fetchHero = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get("/hero");
+        setHero(res.data);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch hero content:", err);
+        setError("Failed to load hero section. Please refresh the page.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHero();
   }, []);
 
-  if (!hero) return null; // loading state can be added if needed
+  // Loading state
+  if (loading) {
+    return (
+      <section className="hero" id="home">
+        <div className="container">
+          <div className="hero-content" style={{ justifyContent: 'center', minHeight: '400px' }}>
+            <div className="loading-spinner"></div>
+            <p>Loading hero section...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <section className="hero" id="home">
+        <div className="container">
+          <div className="hero-content" style={{ justifyContent: 'center', minHeight: '400px' }}>
+            <div className="error-message" style={{ color: '#ef4444', textAlign: 'center' }}>
+              <p>{error}</p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="btn"
+                style={{ marginTop: '20px' }}
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // No data state
+  if (!hero) {
+    return (
+      <section className="hero" id="home">
+        <div className="container">
+          <div className="hero-content" style={{ justifyContent: 'center', minHeight: '400px' }}>
+            <p>No hero content available.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="hero" id="home">
@@ -28,7 +89,7 @@ export default function Hero() {
             <p>{hero.description}</p>
             <div className="hero-buttons">
               <a
-                href={`http://localhost:5000/resume`}
+                href={`${process.env.REACT_APP_API_URL}/resume`}
                 className="btn"
                 target="_blank"
                 rel="noopener noreferrer"

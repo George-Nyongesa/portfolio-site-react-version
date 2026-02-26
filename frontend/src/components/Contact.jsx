@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 
 export default function Contact() {
@@ -12,6 +12,7 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   // Form validation
   const validate = () => {
@@ -29,7 +30,8 @@ export default function Contact() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrors((prev) => ({ ...prev, [e.target.name]: undefined }));
-    setSuccessMsg(""); // clear previous success
+    setSuccessMsg("");
+    setSubmitError("");
   };
 
   // Handle form submit
@@ -40,18 +42,22 @@ export default function Contact() {
     setLoading(true);
     setErrors({});
     setSuccessMsg("");
+    setSubmitError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/contact", form);
+      const res = await api.post("/contact", form);
       if (res.data.success) {
         setSuccessMsg("Message sent successfully!");
         setForm({ name: "", email: "", subject: "", message: "" });
       } else {
-        setErrors({ submit: "Failed to send message" });
+        setSubmitError("Failed to send message. Please try again.");
       }
     } catch (err) {
-      console.error(err);
-      setErrors({ submit: "Failed to send message" });
+      console.error("Contact form error:", err);
+      setSubmitError(
+        err.response?.data?.error || 
+        "Failed to send message. Please check your connection and try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -102,19 +108,20 @@ export default function Contact() {
           <div className="contact-form">
             <form onSubmit={handleSubmit} noValidate>
               <div className={`form-group ${errors.name ? "error" : ""}`}>
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">Name *</label>
                 <input
                   id="name"
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Your name"
+                  disabled={loading}
                 />
                 {errors.name && <div className="error-message">{errors.name}</div>}
               </div>
 
               <div className={`form-group ${errors.email ? "error" : ""}`}>
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">Email *</label>
                 <input
                   id="email"
                   name="email"
@@ -122,6 +129,7 @@ export default function Contact() {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="your@email.com"
+                  disabled={loading}
                 />
                 {errors.email && <div className="error-message">{errors.email}</div>}
               </div>
@@ -134,26 +142,38 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   placeholder="What is this about?"
+                  disabled={loading}
                 />
               </div>
 
               <div className={`form-group ${errors.message ? "error" : ""}`}>
-                <label htmlFor="message">Message</label>
+                <label htmlFor="message">Message *</label>
                 <textarea
                   id="message"
                   name="message"
                   value={form.message}
                   onChange={handleChange}
                   placeholder="Tell me about your project..."
+                  disabled={loading}
                 />
                 {errors.message && <div className="error-message">{errors.message}</div>}
               </div>
 
-              {errors.submit && <div className="error-message">{errors.submit}</div>}
+              {submitError && <div className="error-message">{submitError}</div>}
               {successMsg && <div className="success-message">{successMsg}</div>}
 
-              <button type="submit" className="btn" disabled={loading}>
-                {loading ? "Sending..." : "Send Message"}
+              <button 
+                type="submit" 
+                className="btn" 
+                disabled={loading}
+                style={{ opacity: loading ? 0.7 : 1 }}
+              >
+                {loading ? (
+                  <>
+                    <span className="loading-spinner-small"></span>
+                    Sending...
+                  </>
+                ) : "Send Message"}
               </button>
             </form>
           </div>

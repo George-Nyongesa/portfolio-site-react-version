@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
 
-
 export default function ThemeToggle() {
   const [theme, setTheme] = useState(() => {
     // Load stored theme or use system preference
@@ -11,12 +10,19 @@ export default function ThemeToggle() {
       ? "dark"
       : "light";
   });
+  const [mounted, setMounted] = useState(false);
 
   // Apply theme to <html> and persist it
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
+    setMounted(true);
   }, [theme]);
+
+  // Prevent flash of wrong theme on initial load
+  if (!mounted) {
+    return <button className="theme-toggle-btn" style={{ visibility: 'hidden' }}>...</button>;
+  }
 
   return (
     <button

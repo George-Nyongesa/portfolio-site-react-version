@@ -1,15 +1,67 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/projects")
-      .then((res) => setProjects(res.data))
-      .catch((err) => console.error("Failed to fetch projects:", err));
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get("/projects");
+        setProjects(res.data);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch projects:", err);
+        setError("Failed to load projects. Please refresh the page.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
   }, []);
+
+  if (loading) {
+    return (
+      <section id="projects">
+        <div className="container">
+          <h2>Featured Projects</h2>
+          <div className="loading-spinner"></div>
+          <p>Loading projects...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="projects">
+        <div className="container">
+          <h2>Featured Projects</h2>
+          <div className="error-message">
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()} className="btn">
+              Retry
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (projects.length === 0) {
+    return (
+      <section id="projects">
+        <div className="container">
+          <h2>Featured Projects</h2>
+          <p>No projects available yet.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="projects">
@@ -17,7 +69,7 @@ export default function Projects() {
         <h2>Featured Projects</h2>
         <div className="project-grid">
           {projects.map((p) => (
-            <div key={p.name} className="card project-card">
+            <div key={p._id || p.name} className="card project-card">
               <div
                 className="project-image"
                 style={{ backgroundImage: `url('${p.image}')` }}

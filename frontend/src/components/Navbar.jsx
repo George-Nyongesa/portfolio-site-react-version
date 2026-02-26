@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 
-
 const NAV_ITEMS = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
@@ -15,6 +14,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [resumeLoading, setResumeLoading] = useState(false);
 
   // Toggle body no-scroll when mobile menu is open
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function Navbar() {
       let current = activeSection;
 
       sections.forEach((section) => {
-        const top = section.offsetTop - headerHeight - 60; // slightly earlier
+        const top = section.offsetTop - headerHeight - 60;
         const bottom = top + section.offsetHeight;
         if (window.scrollY >= top && window.scrollY < bottom) {
           current = section.getAttribute("id") || current;
@@ -46,6 +46,12 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [activeSection]);
+
+  const handleResumeClick = () => {
+    setResumeLoading(true);
+    // The loading will be brief, but we can show feedback
+    setTimeout(() => setResumeLoading(false), 1000);
+  };
 
   return (
     <header style={{ boxShadow: scrolled ? "0 2px 10px rgba(0,0,0,0.1)" : "none" }}>
@@ -61,7 +67,7 @@ export default function Navbar() {
                 <a
                   href={`#${item.id}`}
                   className={activeSection === item.id ? "active" : ""}
-                  onClick={() => setMenuOpen(false)} // close mobile menu when clicked
+                  onClick={() => setMenuOpen(false)}
                 >
                   {item.label}
                 </a>
@@ -69,16 +75,15 @@ export default function Navbar() {
             ))}
 
             <li>
-              {/* Prevent default until a real CV link is available */}
               <a
-                href="http://localhost:5000/resume" // use deployed backend URL in production
+                href={`${process.env.REACT_APP_API_URL}/resume`}
                 className="btn"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={handleResumeClick}
               >
-                Download Resume
+                {resumeLoading ? "Opening..." : "Download Resume"}
               </a>
-
             </li>
           </ul>
 
